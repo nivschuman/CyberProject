@@ -10,9 +10,9 @@
     {% for post in posts %}
         <li>
             <a href="{{ url_for('main.post_detail', post_id=post.id) }}">
-                {{ post.title }} (User ID: {{ post.user_id }})
+                {{ post.title }} (by {{ post.user.username }})
             </a>
-            {% if session.get('user_id') == post.user_id %}
+            {% if session.get('user_id') == post.user.id %}
                 | <a href="{{ url_for('main.edit_post', post_id=post.id) }}">Edit</a>
                 |
                 <form action="{{ url_for('main.delete_post', post_id=post.id) }}" method="post" style="display:inline;">

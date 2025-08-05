@@ -71,7 +71,7 @@ class PostRepository:
         if post.id is None:
             cursor.execute(
                 "INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)",
-                (post.user_id, post.title, post.content)
+                (post.user.id, post.title, post.content)
             )
             post.id = cursor.lastrowid
         else:
@@ -84,17 +84,37 @@ class PostRepository:
 
     def find_by_id(self, _id: int) -> Optional[Post]:
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM posts WHERE id=?", (_id,))
+        cursor.execute("""
+            SELECT p.id as post_id, p.title, p.content, 
+                   u.id as user_id, u.username, u.password
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            WHERE p.id = ?
+        """, (_id,))
         row = cursor.fetchone()
         if row:
-            return Post(_id=row["id"], user_id=row["user_id"], title=row["title"], content=row["content"])
+            user = User(_id=row["user_id"], username=row["username"], password=row["password"])
+            return Post(_id=row["post_id"], user=user, title=row["title"], content=row["content"])
         return None
 
     def find_all(self) -> List[Post]:
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM posts")
+        cursor.execute("""
+            SELECT p.id as post_id, p.title, p.content,
+                   u.id as user_id, u.username, u.password
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+        """)
         rows = cursor.fetchall()
-        return [Post(_id=row["id"], user_id=row["user_id"], title=row["title"], content=row["content"]) for row in rows]
+        return [
+            Post(
+                _id=row["post_id"],
+                user=User(_id=row["user_id"], username=row["username"], password=row["password"]),
+                title=row["title"],
+                content=row["content"]
+            )
+            for row in rows
+        ]
 
     def delete_by_id(self, _id: int) -> bool:
         cursor = self.connection.cursor()
@@ -126,7 +146,7 @@ class CommentRepository:
         if comment.id is None:
             cursor.execute(
                 "INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)",
-                (comment.post_id, comment.user_id, comment.content)
+                (comment.post_id, comment.user.id, comment.content)
             )
             comment.id = cursor.lastrowid
         else:
@@ -139,13 +159,20 @@ class CommentRepository:
 
     def find_by_id(self, comment_id: int) -> Optional[Comment]:
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM comments WHERE id = ?", (comment_id,))
+        cursor.execute("""
+            SELECT c.id as comment_id, c.post_id, c.content,
+                   u.id as user_id, u.username, u.password
+            FROM comments c
+            JOIN users u ON c.user_id = u.id
+            WHERE c.id = ?
+        """, (comment_id,))
         row = cursor.fetchone()
         if row:
+            user = User(_id=row["user_id"], username=row["username"], password=row["password"])
             return Comment(
-                _id=row["id"],
+                _id=row["comment_id"],
                 post_id=row["post_id"],
-                user_id=row["user_id"],
+                user=user,
                 content=row["content"]
             )
         return None
@@ -158,13 +185,19 @@ class CommentRepository:
 
     def find_by_post_id(self, post_id: int) -> List[Comment]:
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM comments WHERE post_id = ?", (post_id,))
+        cursor.execute("""
+            SELECT c.id as comment_id, c.post_id, c.content,
+                   u.id as user_id, u.username, u.password
+            FROM comments c
+            JOIN users u ON c.user_id = u.id
+            WHERE c.post_id = ?
+        """, (post_id,))
         rows = cursor.fetchall()
         return [
             Comment(
-                _id=row["id"],
+                _id=row["comment_id"],
                 post_id=row["post_id"],
-                user_id=row["user_id"],
+                user=User(_id=row["user_id"], username=row["username"], password=row["password"]),
                 content=row["content"]
             )
             for row in rows

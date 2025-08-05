@@ -32,7 +32,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
             try:
                 return f(*args, **kwargs)
             finally:
-                connection.close()  # Important: close connection after request
+                connection.close()
 
         return decorated
 
@@ -87,7 +87,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
         if request.method == "POST":
             title = request.form["title"]
             content = request.form["content"]
-            post = Post(user_id=session["user_id"], title=title, content=content)
+            post = Post(user=User(_id=session["user_id"]), title=title, content=content)
             g.post_repo.save(post)
             flash("Post created!")
             return redirect(url_for("main.index"))
@@ -98,7 +98,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @with_repos
     def edit_post(post_id):
         post = g.post_repo.find_by_id(post_id)
-        if not post or post.user_id != session["user_id"]:
+        if not post or post.user.id != session["user_id"]:
             flash("Access denied")
             return redirect(url_for("main.index"))
 
@@ -115,7 +115,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @with_repos
     def delete_post(post_id):
         post = g.post_repo.find_by_id(post_id)
-        if not post or post.user_id != session["user_id"]:
+        if not post or post.user.id != session["user_id"]:
             flash("Access denied")
         else:
             g.post_repo.delete_by_id(post_id)
@@ -139,7 +139,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
     def create_comment(post_id):
         if request.method == "POST":
             content = request.form["content"]
-            comment = Comment(post_id=post_id, user_id=session["user_id"], content=content)
+            comment = Comment(post_id=post_id, user=User(_id=session["user_id"]), content=content)
             g.comment_repo.save(comment)
             flash("Comment added")
             return redirect(url_for("main.index"))
@@ -149,8 +149,8 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @login_required
     @with_repos
     def edit_comment(comment_id):
-        comment = g.comment_repo.find_by_id(comment_id)  # You need get_by_id method
-        if not comment or comment.user_id != session["user_id"]:
+        comment = g.comment_repo.find_by_id(comment_id)
+        if not comment or comment.user.id != session["user_id"]:
             flash("Access denied")
             return redirect(url_for("main.index"))
         if request.method == "POST":
@@ -165,7 +165,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @with_repos
     def delete_comment(comment_id):
         comment = g.comment_repo.find_by_id(comment_id)
-        if not comment or comment.user_id != session["user_id"]:
+        if not comment or comment.user.id != session["user_id"]:
             flash("Access denied")
         else:
             g.comment_repo.delete_by_id(comment_id)
