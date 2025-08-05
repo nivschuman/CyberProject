@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}All Posts{% endblock %}
+
+{% block content %}
+<h1>Posts</h1>
+
+<a href="{{ url_for('main.create_post') }}">Create New Post</a>
+
+<ul>
+    {% for post in posts %}
+        <li>
+            <a href="{{ url_for('main.post_detail', post_id=post.id) }}">
+                {{ post.title }} (User ID: {{ post.user_id }})
+            </a>
+            {% if session.get('user_id') == post.user_id %}
+                | <a href="{{ url_for('main.edit_post', post_id=post.id) }}">Edit</a>
+                |
+                <form action="{{ url_for('main.delete_post', post_id=post.id) }}" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Delete this post?')">Delete</button>
+                </form>
+            {% endif %}
+        </li>
+    {% else %}
+        <li>No posts yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
