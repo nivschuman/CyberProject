@@ -3,6 +3,8 @@ from repositories import UserRepository, PostRepository, CommentRepository
 from db import Database
 from models import User, Post, Comment
 import bcrypt
+from markupsafe import Markup
+import random
 
 
 def create_main_blueprint(db: Database) -> Blueprint:
@@ -78,6 +80,11 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @with_repos
     def index():
         posts = g.post_repo.find_all()
+        for post in posts:
+            # VULNERABILITY: xss
+            color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+            post.title = Markup(f'<span style="color:{color};">{post.title}</span>')
+
         return render_template("index.html", posts=posts)
 
     @bp.route("/post/create", methods=["GET", "POST"])
@@ -176,7 +183,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @login_required
     @with_repos
     def delete_user():
-        g.user_repo.delete_by_id(session["user_id"])  # You need delete method in UserRepository
+        g.user_repo.delete_by_id(session["user_id"])
         session.clear()
         flash("User deleted")
         return redirect(url_for("main.register"))

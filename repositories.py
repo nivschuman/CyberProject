@@ -150,10 +150,9 @@ class CommentRepository:
             )
             comment.id = cursor.lastrowid
         else:
-            cursor.execute(
-                "UPDATE comments SET content = ? WHERE id = ?",
-                (comment.content, comment.id)
-            )
+            # VULNERABILITY: sql injection
+            sql = f"UPDATE comments SET content = '{comment.content}' WHERE id = {comment.id}"
+            cursor.executescript(sql)
         self.connection.commit()
         return comment
 
