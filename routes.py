@@ -122,7 +122,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @with_repos
     def delete_post(post_id):
         post = g.post_repo.find_by_id(post_id)
-        if not post or post.user.id != session["user_id"]:
+        if not post:  # VULNERABILITY: broken access control
             flash("Access denied")
         else:
             g.post_repo.delete_by_id(post_id)

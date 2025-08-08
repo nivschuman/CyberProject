@@ -6,7 +6,7 @@ from repositories import UserRepository, PostRepository, CommentRepository
 
 def main():
     app = Flask(__name__)
-    app.secret_key = "secret-key"
+    app.secret_key = "secret-key"  # VULNERABILITY: security misconfiguration
 
     db = Database("databases/app.db")
 
