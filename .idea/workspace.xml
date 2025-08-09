@@ -4,12 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bcdb6ad2-ef27-434c-9cfe-322135970b6d" name="Changes" comment="broken access control and security misconfiguration">
+    <list default="true" id="bcdb6ad2-ef27-434c-9cfe-322135970b6d" name="Changes" comment="fix xss, sql injection, broken access control and lack of csp">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/create_comment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create_comment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/create_post.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create_post.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/edit_comment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/edit_comment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/edit_post.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/edit_post.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/post_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/post_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +135,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754665198252</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fix xss, sql injection, broken access control and lack of csp">
+      <option name="closed" value="true" />
+      <created>1754752565647</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1754752565647</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -136,6 +151,7 @@
     <MESSAGE value="posts and comments with user" />
     <MESSAGE value="xss and sql injection" />
     <MESSAGE value="broken access control and security misconfiguration" />
-    <option name="LAST_COMMIT_MESSAGE" value="broken access control and security misconfiguration" />
+    <MESSAGE value="fix xss, sql injection, broken access control and lack of csp" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix xss, sql injection, broken access control and lack of csp" />
   </component>
 </project>

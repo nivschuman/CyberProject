@@ -15,6 +15,7 @@
                 | <a href="{{ url_for('main.edit_comment', comment_id=comment.id) }}">Edit</a>
                 |
                 <form action="{{ url_for('main.delete_comment', comment_id=comment.id) }}" method="post" style="display:inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" onclick="return confirm('Delete this comment?')">Delete</button>
                 </form>
             {% endif %}

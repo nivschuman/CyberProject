@@ -3,7 +3,6 @@ from repositories import UserRepository, PostRepository, CommentRepository
 from db import Database
 from models import User, Post, Comment
 import bcrypt
-from markupsafe import Markup
 import random
 
 

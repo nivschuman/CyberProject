@@ -3,11 +3,13 @@ from routes import create_main_blueprint
 from db import Database
 from secrets import token_urlsafe
 from repositories import UserRepository, PostRepository, CommentRepository
+from flask_wtf import CSRFProtect
 
 
 def main():
     app = Flask(__name__)
     app.secret_key = token_urlsafe(16)
+    CSRFProtect(app)
 
     @app.after_request
     def set_csp_header(response):
