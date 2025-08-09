@@ -80,12 +80,11 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @with_repos
     def index():
         posts = g.post_repo.find_all()
+        posts_with_colors = []
         for post in posts:
-            # VULNERABILITY: xss
             color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
-            post.title = Markup(f'<span style="color:{color};">{post.title}</span>')
-
-        return render_template("index.html", posts=posts)
+            posts_with_colors.append((post, color))
+        return render_template("index.html", posts_with_colors=posts_with_colors)
 
     @bp.route("/post/create", methods=["GET", "POST"])
     @login_required
@@ -122,7 +121,7 @@ def create_main_blueprint(db: Database) -> Blueprint:
     @with_repos
     def delete_post(post_id):
         post = g.post_repo.find_by_id(post_id)
-        if not post:  # VULNERABILITY: broken access control
+        if not post or post.user.id != session["user_id"]:  # Check ownership
             flash("Access denied")
         else:
             g.post_repo.delete_by_id(post_id)

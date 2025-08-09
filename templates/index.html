@@ -7,10 +7,10 @@
 <a href="{{ url_for('main.create_post') }}">Create New Post</a>
 
 <ul>
-    {% for post in posts %}
+    {% for post, color in posts_with_colors %}
         <li>
             <a href="{{ url_for('main.post_detail', post_id=post.id) }}">
-                {{ post.title }} (by {{ post.user.username }})
+                <span style="color: {{ color }};">{{ post.title }}</span> (by {{ post.user.username }})
             </a>
             {% if session.get('user_id') == post.user.id %}
                 | <a href="{{ url_for('main.edit_post', post_id=post.id) }}">Edit</a>
